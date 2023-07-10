@@ -22,12 +22,11 @@ jobs:
       - id: regexparsing
         run: |
           [[ ${{ steps.files.outputs.added_modified }} =~ ([a-z-]+)\/[a-zA-Z-]*Artifacts-?([a-zA-Z]*)\.zip ]]
-          # echo "publicationdirectory=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-          echo "::set-output name=publicationdirectory::${BASH_REMATCH[1]}"
+          echo "publicationdirectory=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
           if [ "${BASH_REMATCH[2]}" == "" ]; then
-            echo "::set-output name=channel::prod"
+            echo "channel=prod" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=channel::${BASH_REMATCH[2]}" | tr 'A-Z' 'a-z'
+            echo "channel=${BASH_REMATCH[2]}" | tr 'A-Z' 'a-z' >> $GITHUB_OUTPUT
           fi
 
   # release-in-azure:
