@@ -51,7 +51,7 @@ jobs:
     needs: find-publicationdir-and-channel
     permissions:
       id-token: write
-      contents: read    
+      contents: read
     steps:
       - name: Find file name of Artifact to Publish
         uses: kanga333/variable-mapper@master
