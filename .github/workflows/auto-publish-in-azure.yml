@@ -29,22 +29,6 @@ jobs:
             echo "channel=${BASH_REMATCH[2]}" | tr 'A-Z' 'a-z' >> $GITHUB_OUTPUT
           fi
 
-  # release-in-azure:
-  #   uses: ./.github/workflows/release-in-azure.yml
-  #   with:
-  #     channel: ${{needs.find-publicationdir-and-channel.outputs.channel}}
-  #     publicationdirectory: ${{needs.find-publicationdir-and-channel.outputs.publicationdirectory}}
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-  #   needs: find-publicationdir-and-channel
-  #   secrets:
-  #     AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  #     AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
-
-# Copy and Paste from release-in-azure.yml with a small modification to get the input from the other job
-
   release-in-azure:
     environment: AzureC4A8
     runs-on: ubuntu-latest
@@ -89,17 +73,17 @@ jobs:
         run: exit 1
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Log in with Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
 
       - name: Copy file to Blob Storage
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           inlineScript: |
             az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfile }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfile }}
