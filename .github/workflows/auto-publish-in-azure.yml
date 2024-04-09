@@ -117,7 +117,7 @@ jobs:
             }
 
       - name: Trigger Webhook
-        run: curl -X POST -d "" ${{ secrets.WEBHOOK_URL_SCEPMAN }}&ref=${{ env.targetref }}
+        run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_SCEPMAN }}&ref=${{ env.targetref }}"
 
   trigger-certmaster-webhook:
     if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist-certmaster' }}
@@ -142,6 +142,6 @@ jobs:
             }
 
       - name: Trigger Webhook
-        run: curl -X POST -d "" ${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${{ env.targetref }}
+        run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${{ env.targetref }}"
 
 
