@@ -93,3 +93,55 @@ jobs:
           az logout
           az cache purge
           az account clear
+
+  trigger-scepman-webhook:
+    if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist' }}
+    runs-on: ubuntu-latest
+    needs: find-publicationdir-and-channel
+    steps:
+      - name: Set target reference
+        uses: kanga333/variable-mapper@master
+        with:
+          key: "${{ needs.find-publicationdir-and-channel.outputs.channel }}"
+          map: |
+            {
+              "prod": {
+                "targetref": "release-channel"
+              },
+              "beta": {
+                "targetref": "beta-channel"
+              },
+              "intern(al)?": {
+                "targetref": "internal-channel"
+              }
+            }
+
+      - name: Trigger Webhook
+        run: curl -X POST -d "" ${{ secrets.WEBHOOK_URL_SCEPMAN }}&ref=${{ env.targetref }}
+
+  trigger-certmaster-webhook:
+    if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist-certmaster' }}
+    runs-on: ubuntu-latest
+    needs: find-publicationdir-and-channel
+    steps:
+      - name: Set target reference
+        uses: kanga333/variable-mapper@master
+        with:
+          key: "${{ needs.find-publicationdir-and-channel.outputs.channel }}"
+          map: |
+            {
+              "prod": {
+                "targetref": "release-channel"
+              },
+              "beta": {
+                "targetref": "beta-channel"
+              },
+              "intern(al)?": {
+                "targetref": "internal-channel"
+              }
+            }
+
+      - name: Trigger Webhook
+        run: curl -X POST -d "" ${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${{ env.targetref }}
+
+
