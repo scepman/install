@@ -17,17 +17,26 @@ jobs:
       channel: ${{ steps.regexparsing.outputs.channel }}
       publicationdirectory: ${{ steps.regexparsing.outputs.publicationdirectory }}
     steps:
-      - id: files
-        uses: jitterbit/get-changed-files@v1
+      - name: Checkout
+        uses: actions/checkout@v4
       - id: regexparsing
         run: |
-          [[ ${{ steps.files.outputs.added_modified }} =~ ([a-z-]+)\/[a-zA-Z-]*Artifacts-?([a-zA-Z]*)\.zip ]]
+          echo "Sha=$GITHUB_SHA"
+          diff=$(git diff --name-only --diff-filter=AM origin/master..${GITHUB_SHA} | tr '\n' ' ')
+          echo "test-x"
+          echo "diff=$diff"
+          [[ $diff =~ ([a-z-]+)\/[a-zA-Z-]*Artifacts-?([a-zA-Z]*)\.zip ]]
+          echo "test-0"
+          echo "test - publicationdirectory=${BASH_REMATCH[1]}"
           echo "publicationdirectory=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
           if [ "${BASH_REMATCH[2]}" == "" ]; then
+            echo "test-1"
             echo "channel=prod" >> $GITHUB_OUTPUT
           else
+            echo "test-2"
             echo "channel=${BASH_REMATCH[2]}" | tr 'A-Z' 'a-z' >> $GITHUB_OUTPUT
           fi
+          echo "test 3"
 
   release-in-azure:
     environment: AzureC4A8
