@@ -22,7 +22,7 @@ jobs:
       - id: regexparsing
         run: |
           echo "Sha=$GITHUB_SHA"
-          diff=$(git diff --name-only --diff-filter=AM origin/master..${GITHUB_SHA} | tr '\n' ' ')
+          diff=$(git diff --name-only --diff-filter=AM ${GITHUB_SHA}^..${GITHUB_SHA} | tr '\n' ' ')
           echo "test-x"
           echo "diff=$diff"
           [[ $diff =~ ([a-z-]+)\/[a-zA-Z-]*Artifacts-?([a-zA-Z]*)\.zip ]]
