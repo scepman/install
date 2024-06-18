@@ -49,7 +49,7 @@ jobs:
       contents: read
     steps:
       - name: Find file name of Artifact to Publish
-        uses: kanga333/variable-mapper@master
+        uses: bb-froggy/variable-mapper@master
         with:
           key: "${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}-${{ needs.find-publicationdir-and-channel.outputs.channel }}"
           map: |
@@ -111,7 +111,7 @@ jobs:
     needs: find-publicationdir-and-channel
     steps:
       - name: Set target reference
-        uses: kanga333/variable-mapper@master
+        uses: bb-froggy/variable-mapper@master
         with:
           key: "${{ needs.find-publicationdir-and-channel.outputs.channel }}"
           map: |
@@ -136,7 +136,7 @@ jobs:
     needs: find-publicationdir-and-channel
     steps:
       - name: Set target reference
-        uses: kanga333/variable-mapper@master
+        uses: bb-froggy/variable-mapper@master
         with:
           key: "${{ needs.find-publicationdir-and-channel.outputs.channel }}"
           map: |
