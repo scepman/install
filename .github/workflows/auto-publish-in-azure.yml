@@ -1,8 +1,5 @@
-
 name: Auto-publish Artifacts in Azure
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
   push:
     branches:
@@ -55,22 +52,28 @@ jobs:
           map: |
             {
               "dist-prod": {
-                "publicationfile": "Artifacts.zip"
+                "publicationfile": "Artifacts.zip",
+                "publicationfilelinux": "Artifacts-Linux.zip"
               },
               "dist-beta": {
-                "publicationfile": "Artifacts-Beta.zip"
+                "publicationfile": "Artifacts-Beta.zip",
+                "publicationfilelinux": "Artifacts-Linux-Beta.zip"
               },
               "dist-intern(al)?": {
-                "publicationfile": "Artifacts-Intern.zip"
+                "publicationfile": "Artifacts-Intern.zip",
+                "publicationfilelinux": "Artifacts-Linux-Internal.zip"
               },
               "dist-certmaster-prod": {
-                "publicationfile": "CertMaster-Artifacts.zip"
+                "publicationfile": "CertMaster-Artifacts.zip",
+                "publicationfilelinux": "CertMaster-Artifacts-Linux.zip"
               },
               "dist-certmaster-beta": {
-                "publicationfile": "CertMaster-Artifacts-Beta.zip"
+                "publicationfile": "CertMaster-Artifacts-Beta.zip",
+                "publicationfilelinux": "CertMaster-Artifacts-Linux-Beta.zip"
               },
               "dist-certmaster-intern(al)?": {
-                "publicationfile": "CertMaster-Artifacts-Intern.zip"
+                "publicationfile": "CertMaster-Artifacts-Intern.zip",
+                "publicationfilelinux": "CertMaster-Artifacts-Linux-Internal.zip"
               }
             }
 
@@ -78,9 +81,10 @@ jobs:
         run: |
           echo "Selected directory ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} in channel ${{ needs.find-publicationdir-and-channel.outputs.channel }}"
           echo "File to publish is ${{ env.publicationfile }}"
+          echo "Linux file to publish is ${{ env.publicationfilelinux }}"
 
       - name: Check Input
-        if: ${{ env.publicationfile == '' }}
+        if: ${{ env.publicationfile == '' || env.publicationfilelinux == '' }}
         run: exit 1
 
       - name: Checkout
@@ -98,6 +102,12 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfile }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfile }}
+
+      - name: Copy Linux file to Blob Storage
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfilelinux }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfilelinux }}
 
       - name: Azure CLI logout
         run: |
@@ -154,5 +164,3 @@ jobs:
 
       - name: Trigger Webhook
         run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${{ env.targetref }}"
-
-
