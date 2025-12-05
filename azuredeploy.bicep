@@ -8,7 +8,7 @@ param license string = 'trial'
 @description('Specifies the name of the Azure Key Vault. The name of a Key Vault must be globally unique and contain only DNS-compatible characters (letters, numbers, and hyphens).')
 @minLength(3)
 @maxLength(24)
-param keyVaultName string = 'kv-scepman-UNIQUENAME'
+param keyVaultName string = 'kv-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('When generating the SCEPman CA certificate, which kind of key pair shall be created? RSA is a software-protected RSA key; RSA-HSM is HSM-protected.')
 @allowed([
@@ -20,10 +20,10 @@ param caKeyType string = 'RSA-HSM'
 @description('Choose a globally unique name for your storage account. Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.')
 @minLength(3)
 @maxLength(24)
-param storageAccountName string = 'stscepmanuniquename'
+param storageAccountName string = 'stscepman${uniqueString(resourceGroup().id)}'
 
 @maxLength(40)
-param appServicePlanName string = 'asp-scepman-UNIQUENAME'
+param appServicePlanName string = 'asp-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('Provide the Resource ID of an existing App Service Plan (the long string displayed in the properties tab). Keep default value \'none\' if you want to create a new one.')
 param existingAppServicePlanID string = 'none'
@@ -33,16 +33,16 @@ param deployOnLinux bool = true
 
 @description('The SCEPman App Service and part of the default FQDN. Therefore, it must be globally unique and contain only DNS-compatible characters.')
 @maxLength(60)
-param primaryAppServiceName string = 'app-scepman-UNIQUENAME'
+param primaryAppServiceName string = 'app-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('The Log Analytics Workspace with log data. Alphanumerics and hyphens are allowed.')
 @minLength(4)
 @maxLength(63)
-param logAnalyticsWorkspaceName string = 'log-scepman-UNIQUENAME'
+param logAnalyticsWorkspaceName string = 'log-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('The App Service for the component SCEPman Certificate Master. As it is part of the default FQDN, it must be globally unique and contain only DNS-compatible characters.')
 @maxLength(60)
-param certificateMasterAppServiceName string = 'app-scepman-UNIQUENAME-cm'
+param certificateMasterAppServiceName string = 'app-scepman-${uniqueString(resourceGroup().id)}-cm'
 
 @description('Enable the App Service health check.')
 param enableHealthCheck bool = true
@@ -52,17 +52,17 @@ param deployPrivateNetwork bool = true
 
 @description('The name of the Virtual Network. This is only applicable if deployPrivateNetwork is chosen.')
 @maxLength(80)
-param virtualNetworkName string = 'vnet-scepman-UNIQUENAME'
+param virtualNetworkName string = 'vnet-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('Name of the Private Endpoint for the Key Vault. This is only applicable if deployPrivateNetwork is chosen.')
 @minLength(4)
 @maxLength(64)
-param privateEndpointForKeyVaultName string = 'pep-kv-scepman-UNIQUENAME'
+param privateEndpointForKeyVaultName string = 'pep-kv-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('Name of the Private Endpoint for the Azure Table Storage Service. This is only applicable if deployPrivateNetwork is chosen.')
 @minLength(4)
 @maxLength(64)
-param privateEndpointForTableStorage string = 'pep-sts-scepman-UNIQUENAME'
+param privateEndpointForTableStorage string = 'pep-sts-scepman-${uniqueString(resourceGroup().id)}'
 
 @description('Location for all resources. For a manual deployment, we recommend the default value.')
 param location string = resourceGroup().location
@@ -71,8 +71,8 @@ param location string = resourceGroup().location
 param resourceTags object = {}
 
 var artifactsRepositoryUrl = 'https://raw.githubusercontent.com/scepman/install/master/'
-var ArtifactsLocationSCEPman = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist/Artifacts-Linux.zip' : 'dist/Artifacts.zip')
-var ArtifactsLocationCertMaster = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist-certmaster/CertMaster-Artifacts-Linux.zip' : 'dist-certmaster/CertMaster-Artifacts.zip')
+var ArtifactsLocationSCEPman = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist/Artifacts-Linux-Internal.zip' : 'dist/Artifacts-Intern.zip')
+var ArtifactsLocationCertMaster = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist-certmaster/CertMaster-Artifacts-Linux-Internal.zip' : 'dist-certmaster/CertMaster-Artifacts-Intern.zip')
 var appServiceNames = [
   primaryAppServiceName
   certificateMasterAppServiceName

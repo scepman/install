@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.39.26.7824",
-      "templateHash": "9265161188761980991"
+      "templateHash": "4942280913068034173"
     }
   },
   "parameters": {
@@ -25,7 +25,7 @@
     },
     "keyVaultName": {
       "type": "string",
-      "defaultValue": "kv-scepman-UNIQUENAME",
+      "defaultValue": "[format('kv-scepman-{0}', uniqueString(resourceGroup().id))]",
       "minLength": 3,
       "maxLength": 24,
       "metadata": {
@@ -45,7 +45,7 @@
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "stscepmanuniquename",
+      "defaultValue": "[format('stscepman{0}', uniqueString(resourceGroup().id))]",
       "minLength": 3,
       "maxLength": 24,
       "metadata": {
@@ -54,7 +54,7 @@
     },
     "appServicePlanName": {
       "type": "string",
-      "defaultValue": "asp-scepman-UNIQUENAME",
+      "defaultValue": "[format('asp-scepman-{0}', uniqueString(resourceGroup().id))]",
       "maxLength": 40
     },
     "existingAppServicePlanID": {
@@ -73,7 +73,7 @@
     },
     "primaryAppServiceName": {
       "type": "string",
-      "defaultValue": "app-scepman-UNIQUENAME",
+      "defaultValue": "[format('app-scepman-{0}', uniqueString(resourceGroup().id))]",
       "maxLength": 60,
       "metadata": {
         "description": "The SCEPman App Service and part of the default FQDN. Therefore, it must be globally unique and contain only DNS-compatible characters."
@@ -81,7 +81,7 @@
     },
     "logAnalyticsWorkspaceName": {
       "type": "string",
-      "defaultValue": "log-scepman-UNIQUENAME",
+      "defaultValue": "[format('log-scepman-{0}', uniqueString(resourceGroup().id))]",
       "minLength": 4,
       "maxLength": 63,
       "metadata": {
@@ -90,7 +90,7 @@
     },
     "certificateMasterAppServiceName": {
       "type": "string",
-      "defaultValue": "app-scepman-UNIQUENAME-cm",
+      "defaultValue": "[format('app-scepman-{0}-cm', uniqueString(resourceGroup().id))]",
       "maxLength": 60,
       "metadata": {
         "description": "The App Service for the component SCEPman Certificate Master. As it is part of the default FQDN, it must be globally unique and contain only DNS-compatible characters."
@@ -112,7 +112,7 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "vnet-scepman-UNIQUENAME",
+      "defaultValue": "[format('vnet-scepman-{0}', uniqueString(resourceGroup().id))]",
       "maxLength": 80,
       "metadata": {
         "description": "The name of the Virtual Network. This is only applicable if deployPrivateNetwork is chosen."
@@ -120,7 +120,7 @@
     },
     "privateEndpointForKeyVaultName": {
       "type": "string",
-      "defaultValue": "pep-kv-scepman-UNIQUENAME",
+      "defaultValue": "[format('pep-kv-scepman-{0}', uniqueString(resourceGroup().id))]",
       "minLength": 4,
       "maxLength": 64,
       "metadata": {
@@ -129,7 +129,7 @@
     },
     "privateEndpointForTableStorage": {
       "type": "string",
-      "defaultValue": "pep-sts-scepman-UNIQUENAME",
+      "defaultValue": "[format('pep-sts-scepman-{0}', uniqueString(resourceGroup().id))]",
       "minLength": 4,
       "maxLength": 64,
       "metadata": {
@@ -153,8 +153,8 @@
   },
   "variables": {
     "artifactsRepositoryUrl": "https://raw.githubusercontent.com/scepman/install/master/",
-    "ArtifactsLocationSCEPman": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist/Artifacts-Linux.zip', 'dist/Artifacts.zip'))]",
-    "ArtifactsLocationCertMaster": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist-certmaster/CertMaster-Artifacts-Linux.zip', 'dist-certmaster/CertMaster-Artifacts.zip'))]",
+    "ArtifactsLocationSCEPman": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist/Artifacts-Linux-Internal.zip', 'dist/Artifacts-Intern.zip'))]",
+    "ArtifactsLocationCertMaster": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist-certmaster/CertMaster-Artifacts-Linux-Internal.zip', 'dist-certmaster/CertMaster-Artifacts-Intern.zip'))]",
     "appServiceNames": [
       "[parameters('primaryAppServiceName')]",
       "[parameters('certificateMasterAppServiceName')]"
