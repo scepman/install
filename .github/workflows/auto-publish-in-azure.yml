@@ -1,5 +1,8 @@
+
 name: Auto-publish Artifacts in Azure
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
   push:
     branches:
@@ -15,28 +18,27 @@ jobs:
       publicationdirectory: ${{ steps.regexparsing.outputs.publicationdirectory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2  # Shallow clone to have the commit history for the diff
       - id: regexparsing
         run: |
           echo "Sha=$GITHUB_SHA"
           diff=$(git diff --name-only --diff-filter=AM ${GITHUB_SHA}^..${GITHUB_SHA} | tr '\n' ' ')
-          echo "debug-x"
-          echo "debug: diff=$diff"
+          echo "test-x"
+          echo "diff=$diff"
           [[ $diff =~ ([a-z-]+)\/[a-zA-Z-]*Artifacts-?([a-zA-Z]*)\.zip ]]
-          echo "debug-0"
-          echo "debug: publicationdirectory=${BASH_REMATCH[1]}"
+          echo "test-0"
+          echo "test - publicationdirectory=${BASH_REMATCH[1]}"
           echo "publicationdirectory=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-          if [[ -z "${BASH_REMATCH[2]}" || "${BASH_REMATCH[2],,}" == "linux" ]]; then
-            echo "debug-1"
+          if [ "${BASH_REMATCH[2]}" == "" ]; then
+            echo "test-1"
             echo "channel=prod" >> $GITHUB_OUTPUT
           else
-            echo "debug-2"
-            echo "debug: channel=${BASH_REMATCH[2]}"
+            echo "test-2"
             echo "channel=${BASH_REMATCH[2]}" | tr 'A-Z' 'a-z' >> $GITHUB_OUTPUT
           fi
-          echo "debug-3"
+          echo "test 3"
 
   release-in-azure:
     environment: AzureC4A8
@@ -53,28 +55,22 @@ jobs:
           map: |
             {
               "dist-prod": {
-                "publicationfile": "Artifacts.zip",
-                "publicationfilelinux": "Artifacts-Linux.zip"
+                "publicationfile": "Artifacts.zip"
               },
               "dist-beta": {
-                "publicationfile": "Artifacts-Beta.zip",
-                "publicationfilelinux": "Artifacts-Linux-Beta.zip"
+                "publicationfile": "Artifacts-Beta.zip"
               },
               "dist-intern(al)?": {
-                "publicationfile": "Artifacts-Intern.zip",
-                "publicationfilelinux": "Artifacts-Linux-Internal.zip"
+                "publicationfile": "Artifacts-Intern.zip"
               },
               "dist-certmaster-prod": {
-                "publicationfile": "CertMaster-Artifacts.zip",
-                "publicationfilelinux": "CertMaster-Artifacts-Linux.zip"
+                "publicationfile": "CertMaster-Artifacts.zip"
               },
               "dist-certmaster-beta": {
-                "publicationfile": "CertMaster-Artifacts-Beta.zip",
-                "publicationfilelinux": "CertMaster-Artifacts-Linux-Beta.zip"
+                "publicationfile": "CertMaster-Artifacts-Beta.zip"
               },
               "dist-certmaster-intern(al)?": {
-                "publicationfile": "CertMaster-Artifacts-Intern.zip",
-                "publicationfilelinux": "CertMaster-Artifacts-Linux-Internal.zip"
+                "publicationfile": "CertMaster-Artifacts-Intern.zip"
               }
             }
 
@@ -82,14 +78,13 @@ jobs:
         run: |
           echo "Selected directory ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} in channel ${{ needs.find-publicationdir-and-channel.outputs.channel }}"
           echo "File to publish is ${{ env.publicationfile }}"
-          echo "Linux file to publish is ${{ env.publicationfilelinux }}"
 
       - name: Check Input
-        if: ${{ env.publicationfile == '' || env.publicationfilelinux == '' }}
+        if: ${{ env.publicationfile == '' }}
         run: exit 1
 
       - name: Checkout
-        uses: actions/checkout@v6 # This has fetch-depth 1 by default
+        uses: actions/checkout@v4
 
       - name: Log in with Azure
         uses: azure/login@v2
@@ -103,12 +98,6 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfile }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfile }}
-
-      - name: Copy Linux file to Blob Storage
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfilelinux }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfilelinux }}
 
       - name: Azure CLI logout
         run: |
@@ -165,3 +154,5 @@ jobs:
 
       - name: Trigger Webhook
         run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${{ env.targetref }}"
+
+
