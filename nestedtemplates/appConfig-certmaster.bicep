@@ -37,6 +37,11 @@ resource appServiceName_appsettings 'Microsoft.Web/sites/config@2024-04-01' = {
       resourceId('Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspaceName),
       '2022-10-01'
     ).primarySharedKey
+    '${convertVariableNameToLinux('AppConfig:LoggingConfig:AzureOfferingDomain', deployOnLinux)}': 'azure.us'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:AzureADEndpoint', deployOnLinux)}': 'https://login.microsoftonline.us'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:MSGraphEndpoint', deployOnLinux)}': 'https://graph.microsoft.us'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:KeyVaultEndpoint', deployOnLinux)}': 'https://vault.usgovcloudapi.net'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:ManagementEndpoint', deployOnLinux)}': 'https://api.manage.microsoft.us'
   }
 }
 

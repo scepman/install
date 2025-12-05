@@ -73,6 +73,11 @@ resource appServiceName_appsettings 'Microsoft.Web/sites/config@2024-04-01' = {
     '${convertVariableNameToLinux('AppConfig:OCSP:UseAuthorizedResponder', deployOnLinux)}': 'true'
     '${convertVariableNameToLinux('AppConfig:ValidityClockSkewMinutes', deployOnLinux)}': '1440'
     '${convertVariableNameToLinux('AppConfig:KeyVaultConfig:RootCertificateConfig:Subject', deployOnLinux)}': 'CN=SCEPman-Root-CA-V1, OU=${subscription().tenantId}, O="${OrgName}"'
+    '${convertVariableNameToLinux('AppConfig:LoggingConfig:AzureOfferingDomain', deployOnLinux)}': 'azure.us'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:AzureADEndpoint', deployOnLinux)}': 'https://login.microsoftonline.us'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:MSGraphEndpoint', deployOnLinux)}': 'https://graph.microsoft.us'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:KeyVaultEndpoint', deployOnLinux)}': 'https://vault.usgovcloudapi.net'
+    '${convertVariableNameToLinux('AppConfig:AzureCloudConfig:ManagementEndpoint', deployOnLinux)}': 'https://api.manage.microsoft.us'
   }
 }
 

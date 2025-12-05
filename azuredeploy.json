@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.39.26.7824",
-      "templateHash": "9265161188761980991"
+      "templateHash": "11645714630696138468"
     }
   },
   "parameters": {
@@ -921,7 +921,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.39.26.7824",
-              "templateHash": "10677728227586191960"
+              "templateHash": "13394606690483301507"
             }
           },
           "functions": [
@@ -1061,7 +1061,12 @@
                 "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:KeyVaultConfig:RootCertificateConfig:KeySize', parameters('deployOnLinux')))]": "[parameters('caKeySize')]",
                 "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:OCSP:UseAuthorizedResponder', parameters('deployOnLinux')))]": "true",
                 "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:ValidityClockSkewMinutes', parameters('deployOnLinux')))]": "1440",
-                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:KeyVaultConfig:RootCertificateConfig:Subject', parameters('deployOnLinux')))]": "[format('CN=SCEPman-Root-CA-V1, OU={0}, O=\"{1}\"', subscription().tenantId, parameters('OrgName'))]"
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:KeyVaultConfig:RootCertificateConfig:Subject', parameters('deployOnLinux')))]": "[format('CN=SCEPman-Root-CA-V1, OU={0}, O=\"{1}\"', subscription().tenantId, parameters('OrgName'))]",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:LoggingConfig:AzureOfferingDomain', parameters('deployOnLinux')))]": "azure.us",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:AzureADEndpoint', parameters('deployOnLinux')))]": "https://login.microsoftonline.us",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:MSGraphEndpoint', parameters('deployOnLinux')))]": "https://graph.microsoft.us",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:KeyVaultEndpoint', parameters('deployOnLinux')))]": "https://vault.usgovcloudapi.net",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:ManagementEndpoint', parameters('deployOnLinux')))]": "https://api.manage.microsoft.us"
               }
             },
             "appServiceName_websettings": {
@@ -1126,7 +1131,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.39.26.7824",
-              "templateHash": "1481677744462222338"
+              "templateHash": "3969664798347785002"
             }
           },
           "functions": [
@@ -1213,7 +1218,12 @@
                 "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:SCEPman:URL', parameters('deployOnLinux')))]": "[parameters('scepmanUrl')]",
                 "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AuthConfig:TenantId', parameters('deployOnLinux')))]": "[subscription().tenantId]",
                 "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:LoggingConfig:WorkspaceId', parameters('deployOnLinux')))]": "[parameters('logAnalyticsWorkspaceId')]",
-                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:LoggingConfig:SharedKey', parameters('deployOnLinux')))]": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2022-10-01').primarySharedKey]"
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:LoggingConfig:SharedKey', parameters('deployOnLinux')))]": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName')), '2022-10-01').primarySharedKey]",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:LoggingConfig:AzureOfferingDomain', parameters('deployOnLinux')))]": "azure.us",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:AzureADEndpoint', parameters('deployOnLinux')))]": "https://login.microsoftonline.us",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:MSGraphEndpoint', parameters('deployOnLinux')))]": "https://graph.microsoft.us",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:KeyVaultEndpoint', parameters('deployOnLinux')))]": "https://vault.usgovcloudapi.net",
+                "[format('{0}', __bicep.convertVariableNameToLinux('AppConfig:AzureCloudConfig:ManagementEndpoint', parameters('deployOnLinux')))]": "https://api.manage.microsoft.us"
               }
             },
             "appServiceName_websettings": {
@@ -1271,7 +1281,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.39.26.7824",
-              "templateHash": "4722436582661142344"
+              "templateHash": "15714649874765041271"
             }
           },
           "parameters": {
@@ -1326,10 +1336,10 @@
               "francecentral",
               "germanywestcentral",
               "japaneast",
-              "japanwest",
               "koreacentral",
               "northeurope",
               "norwayeast",
+              "qatarcentral",
               "southafricanorth",
               "southcentralus",
               "southeastasia",
@@ -1343,89 +1353,43 @@
             ],
             "zrsRegions": [
               "australiaeast",
-              "austriaeast",
-              "belgiumcentral",
               "brazilsouth",
               "canadacentral",
               "centralindia",
               "centralus",
-              "chilecentral",
               "eastasia",
               "eastus",
               "eastus2",
               "francecentral",
               "germanywestcentral",
-              "indonesiacentral",
-              "israelcentral",
-              "italynorth",
               "japaneast",
-              "japanwest",
               "koreacentral",
-              "malaysiawest",
-              "mexicocentral",
-              "newzealandnorth",
               "northeurope",
               "norwayeast",
-              "polandcentral",
               "qatarcentral",
               "southafricanorth",
               "southcentralus",
               "southeastasia",
-              "spaincentral",
               "swedencentral",
               "switzerlandnorth",
               "uaenorth",
               "uksouth",
               "westeurope",
               "westus2",
-              "westus3"
-            ],
-            "geoRedundantRegions": [
-              "australiacentral",
-              "australiacentral2",
-              "australiaeast",
+              "westus3",
               "australiasoutheast",
-              "brazilsouth",
-              "brazilsoutheast",
-              "canadacentral",
               "canadaeast",
-              "centralindia",
-              "centralus",
-              "eastasia",
-              "eastus",
-              "eastus2",
-              "francecentral",
-              "francesouth",
-              "germanynorth",
-              "germanywestcentral",
-              "japaneast",
+              "centraluseuap",
+              "eastus2euap",
               "japanwest",
-              "koreacentral",
               "koreasouth",
               "northcentralus",
-              "northeurope",
-              "norwayeast",
-              "norwaywest",
-              "southafricanorth",
-              "southafricawest",
-              "southcentralus",
               "southindia",
-              "southeastasia",
-              "swedencentral",
-              "switzerlandnorth",
-              "switzerlandwest",
-              "uaecentral",
-              "uaenorth",
-              "uksouth",
               "ukwest",
               "westcentralus",
-              "westeurope",
-              "westindia",
-              "westus",
-              "westus2",
-              "westus3"
+              "westus"
             ],
-            "storageAccountSku": "[if(contains(variables('gzrsRegions'), parameters('location')), 'Standard_GZRS', if(contains(variables('geoRedundantRegions'), parameters('location')), 'Standard_GRS', if(contains(variables('zrsRegions'), parameters('location')), 'Standard_ZRS', 'Standard_LRS')))]"
+            "storageAccountSku": "[if(contains(variables('gzrsRegions'), parameters('location')), 'Standard_GZRS', if(contains(variables('zrsRegions'), parameters('location')), 'Standard_ZRS', 'Standard_LRS'))]"
           },
           "resources": [
             {
