@@ -71,8 +71,8 @@ param location string = resourceGroup().location
 param resourceTags object = {}
 
 var artifactsRepositoryUrl = 'https://raw.githubusercontent.com/scepman/install/master/'
-var ArtifactsLocationSCEPman = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist/Artifacts-Linux.zip' : 'dist/Artifacts.zip')
-var ArtifactsLocationCertMaster = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist-certmaster/CertMaster-Artifacts-Linux.zip' : 'dist-certmaster/CertMaster-Artifacts.zip')
+var ArtifactsLocationSCEPman = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist/Artifacts-Linux-Beta.zip' : 'dist/Artifacts-Beta.zip')
+var ArtifactsLocationCertMaster = uri(artifactsRepositoryUrl, deployOnLinux ? 'dist-certmaster/CertMaster-Artifacts-Linux-Beta.zip' : 'dist-certmaster/CertMaster-Artifacts-Beta.zip')
 var appServiceNames = [
   primaryAppServiceName
   certificateMasterAppServiceName

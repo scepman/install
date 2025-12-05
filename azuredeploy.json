@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.39.26.7824",
-      "templateHash": "9265161188761980991"
+      "templateHash": "8864301656293879319"
     }
   },
   "parameters": {
@@ -153,8 +153,8 @@
   },
   "variables": {
     "artifactsRepositoryUrl": "https://raw.githubusercontent.com/scepman/install/master/",
-    "ArtifactsLocationSCEPman": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist/Artifacts-Linux.zip', 'dist/Artifacts.zip'))]",
-    "ArtifactsLocationCertMaster": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist-certmaster/CertMaster-Artifacts-Linux.zip', 'dist-certmaster/CertMaster-Artifacts.zip'))]",
+    "ArtifactsLocationSCEPman": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist/Artifacts-Linux-Beta.zip', 'dist/Artifacts-Beta.zip'))]",
+    "ArtifactsLocationCertMaster": "[uri(variables('artifactsRepositoryUrl'), if(parameters('deployOnLinux'), 'dist-certmaster/CertMaster-Artifacts-Linux-Beta.zip', 'dist-certmaster/CertMaster-Artifacts-Beta.zip'))]",
     "appServiceNames": [
       "[parameters('primaryAppServiceName')]",
       "[parameters('certificateMasterAppServiceName')]"
