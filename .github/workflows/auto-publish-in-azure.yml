@@ -13,6 +13,8 @@ jobs:
     outputs:
       channel: ${{ steps.regexparsing.outputs.channel }}
       publicationdirectory: ${{ steps.regexparsing.outputs.publicationdirectory }}
+      has_scepman_webhook: ${{ steps.check_webhooks.outputs.has_scepman_webhook }}
+      has_certmaster_webhook: ${{ steps.check_webhooks.outputs.has_certmaster_webhook }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -37,6 +39,21 @@ jobs:
             echo "channel=${BASH_REMATCH[2]}" | tr 'A-Z' 'a-z' >> $GITHUB_OUTPUT
           fi
           echo "debug-3"
+      - id: check_webhooks
+        env:
+          WEBHOOK_URL_SCEPMAN: ${{ secrets.WEBHOOK_URL_SCEPMAN }}
+          WEBHOOK_URL_CERTMASTER: ${{ secrets.WEBHOOK_URL_CERTMASTER }}
+        run: |
+          if [ -n "$WEBHOOK_URL_SCEPMAN" ]; then
+            echo "has_scepman_webhook=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_scepman_webhook=false" >> $GITHUB_OUTPUT
+          fi
+          if [ -n "$WEBHOOK_URL_CERTMASTER" ]; then
+            echo "has_certmaster_webhook=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_certmaster_webhook=false" >> $GITHUB_OUTPUT
+          fi
 
   release-in-azure:
     environment: AzureC4A8
@@ -117,7 +134,7 @@ jobs:
           az account clear
 
   trigger-scepman-webhook:
-    if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist' }}
+    if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist' && needs.find-publicationdir-and-channel.outputs.has_scepman_webhook == 'true' }}
     runs-on: ubuntu-latest
     needs: find-publicationdir-and-channel
     steps:
@@ -142,7 +159,7 @@ jobs:
         run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_SCEPMAN }}&ref=${{ env.targetref }}"
 
   trigger-certmaster-webhook:
-    if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist-certmaster' }}
+    if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist-certmaster' && needs.find-publicationdir-and-channel.outputs.has_certmaster_webhook == 'true' }}
     runs-on: ubuntu-latest
     needs: find-publicationdir-and-channel
     steps:
