@@ -17,7 +17,7 @@ jobs:
       has_certmaster_webhook: ${{ steps.check_webhooks.outputs.has_certmaster_webhook }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2  # Shallow clone to have the commit history for the diff
       - id: regexparsing
@@ -106,7 +106,7 @@ jobs:
         run: exit 1
 
       - name: Checkout
-        uses: actions/checkout@v6 # This has fetch-depth 1 by default
+        uses: actions/checkout@v7 # This has fetch-depth 1 by default
 
       - name: Log in with Azure
         uses: azure/login@v3
