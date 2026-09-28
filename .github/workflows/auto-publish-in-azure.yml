@@ -17,9 +17,10 @@ jobs:
       has_certmaster_webhook: ${{ steps.check_webhooks.outputs.has_certmaster_webhook }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 2  # Shallow clone to have the commit history for the diff
+          persist-credentials: false
       - id: regexparsing
         run: |
           echo "Sha=$GITHUB_SHA"
@@ -97,32 +98,37 @@ jobs:
 
       - name: Print what we have found so far (Debug)
         run: |
-          echo "Selected directory ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} in channel ${{ needs.find-publicationdir-and-channel.outputs.channel }}"
-          echo "File to publish is ${{ env.publicationfile }}"
-          echo "Linux file to publish is ${{ env.publicationfilelinux }}"
+          echo "Selected directory ${NEEDS_FIND_PUBLICATIONDIR_AND_CHANNEL_OUTPUTS_PUBLICATIONDIRECTORY} in channel ${NEEDS_FIND_PUBLICATIONDIR_AND_CHANNEL_OUTPUTS_CHANNEL}"
+          echo "File to publish is ${publicationfile}"
+          echo "Linux file to publish is ${publicationfilelinux}"
+        env:
+          NEEDS_FIND_PUBLICATIONDIR_AND_CHANNEL_OUTPUTS_PUBLICATIONDIRECTORY: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}
+          NEEDS_FIND_PUBLICATIONDIR_AND_CHANNEL_OUTPUTS_CHANNEL: ${{ needs.find-publicationdir-and-channel.outputs.channel }}
 
       - name: Check Input
         if: ${{ env.publicationfile == '' || env.publicationfilelinux == '' }}
         run: exit 1
 
       - name: Checkout
-        uses: actions/checkout@v6 # This has fetch-depth 1 by default
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - name: Log in with Azure
-        uses: azure/login@v3
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
 
       - name: Copy file to Blob Storage
-        uses: azure/CLI@v3
+        uses: azure/CLI@9eb25b8360668fb0ecbafa808d40e2197b2f5f52 # v3.0.0
         with:
           inlineScript: |
             az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfile }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfile }}
 
       - name: Copy Linux file to Blob Storage
-        uses: azure/CLI@v3
+        uses: azure/CLI@9eb25b8360668fb0ecbafa808d40e2197b2f5f52 # v3.0.0
         with:
           inlineScript: |
             az storage blob upload --auth-mode login --overwrite -f ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }}/${{ env.publicationfilelinux }} --account-name scepmanartifactsinstall --container-name ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory }} --name ${{ env.publicationfilelinux }}
@@ -156,7 +162,7 @@ jobs:
             }
 
       - name: Trigger Webhook
-        run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_SCEPMAN }}&ref=${{ env.targetref }}"
+        run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_SCEPMAN }}&ref=${targetref}"
 
   trigger-certmaster-webhook:
     if: ${{ needs.find-publicationdir-and-channel.outputs.publicationdirectory == 'dist-certmaster' && needs.find-publicationdir-and-channel.outputs.has_certmaster_webhook == 'true' }}
@@ -181,4 +187,4 @@ jobs:
             }
 
       - name: Trigger Webhook
-        run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${{ env.targetref }}"
+        run: curl -X POST -d "" "${{ secrets.WEBHOOK_URL_CERTMASTER }}&ref=${targetref}"
